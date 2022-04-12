@@ -1,0 +1,38 @@
+input[type="submit"],
+a.button,
+button,
+.wp-block-button__link,
+.wp-block-search__button {
+	font-size: $input-btn-font-size;
+
+	&:hover {
+
+	}
+
+	&:not(.has-background) {
+		$default: $primary;
+		background-color: $default;
+
+		&:hover,
+		&:focus {
+			background-color: darken( $default, 20% );
+		}
+	}
+
+	@each $name, $color in $colors {
+
+		&.has-#{$name}-color:hover,
+		&.has-#{$name}-color:focus {
+			color: $color;
+		}
+
+		&.has-#{$name}-background-color:hover,
+		&.has-#{$name}-background-color:focus {
+			background-color: darken( $color, 20% );
+		}
+	}
+}
+
+.wp-block-button.is-style-outline .wp-block-button__link {
+
+}

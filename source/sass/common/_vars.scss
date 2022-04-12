@@ -1,0 +1,55 @@
+// Colors.
+$colors: (
+	'black': #000,
+	'white': #fff,
+);
+
+// Color Aliases.
+$accent-primary: color( 'black' );
+$body-font-color: color( 'black' );
+$selection-background: $accent-primary;
+
+// Fonts.
+$body-font: sans-serif;
+$heading-font: serif;
+$base-font-size: 16;
+$font-weights: (
+	'regular': 500,
+	'medium': 600,
+	'bold': 700,
+);
+
+// Assets.
+$images-path: 'assets/img/';
+$fonts-path: 'assets/fonts/';
+
+// Container.
+$content-width: 1464; // In pixels.
+$content-wide-width: 1820; // In pixels.
+$container-padding: 30; // In pixels.
+$container-shift: calc((100vw - #{$content-width}px) / 2);
+$neg-container-shift: calc((100vw - #{$content-width}px) / -2);
+$column-spacing: 4rem;
+$block-spacing: 2rem;
+
+// Layers.
+$z-index: (
+
+);
+
+// Breakpoints.
+$breakpoints: (
+	// DO NOT REMOVE!
+	'container': $content-width + ( $container-padding * 2 ),
+	'tablet': 768,
+	'mobile': 480,
+	'admin-bar': 782,
+
+	// THEME Breakpoints.
+);
+
+// Transitions.
+$transition-normal: all 200ms ease-in-out;
+
+// Third Parties.
+$gform-fields: 'input[type="text"],input[type="password"],input[type="email"],input[type="url"],input[type="date"],input[type="month"],input[type="time"],input[type="datetime"],input[type="datetime-local"],input[type="week"],input[type="number"],input[type="search"],input[type="tel"],input[type="color"],textarea,select';

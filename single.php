@@ -9,9 +9,8 @@
 
 get_header();
 ?>
-
 <div id="primary" class="content-area">
-    <main tabindex="-1" id="main" class="site-main container">
+	<main tabindex="-1" id="main" class="site-main container">
 
 		<?php
 		while ( have_posts() ) :
@@ -29,6 +28,7 @@ get_header();
 		endwhile; // End of the loop.
 		?>
 
-    </main>
+	</main>
 </div>
-<?php get_footer(); ?>
+<?php
+get_footer();

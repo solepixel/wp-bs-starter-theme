@@ -1,0 +1,6 @@
+// Theme CSS Vars and color classes.
+@include prepare-vars();
+
+@import "container";
+@import "header";
+@import "footer";

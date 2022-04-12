@@ -17,7 +17,8 @@ if ( ! function_exists( '_s_posted_on' ) ) :
 			$time_string = '<time class="entry-date published updated" datetime="%1$s" itemprop="datePublished">%2$s</time><time class="entry-date modified screen-reader-text" datetime="%3$s" itemprop="dateModified">%4$s</time>';
 		}
 
-		$time_string = sprintf( $time_string,
+		$time_string = sprintf(
+			$time_string,
 			esc_attr( get_the_date( DATE_W3C ) ),
 			esc_html( get_the_date() ),
 			esc_attr( get_the_modified_date( DATE_W3C ) ),
@@ -101,8 +102,10 @@ if ( ! function_exists( '_s_post_thumbnail' ) ) :
 	 *
 	 * Wraps the post thumbnail in an anchor element on index views, or a div
 	 * element when on single views.
+	 *
+	 * @param string $size Thumbnail size.
 	 */
-	function _s_post_thumbnail() {
+	function _s_post_thumbnail( $size = 'medium_large' ) {
 		if ( post_password_required() || is_attachment() || ! has_post_thumbnail() ) {
 			return;
 		}
@@ -112,61 +115,71 @@ if ( ! function_exists( '_s_post_thumbnail' ) ) :
 		if ( is_singular() ) :
 			?>
 
-            <div class="entry-image">
-                <div class="imagecontainer">
-						<?php echo _s_lazy_image($img_id, 'medium_large', 'img-fluid'); ?>
-                </div>
-            </div>
+			<div class="entry-image">
+				<div class="imagecontainer">
+					<?php echo _s_lazy_image( $img_id, $size, 'img-fluid' ); ?>
+				</div>
+			</div>
 
 		<?php else : ?>
 
-            <div class="entry-image">
-                <div class="imagecontainer">
-                    <a class="post-thumbnail" href="<?php the_permalink() ?>">
-						<?php echo _s_lazy_image($img_id, 'medium_large', 'img-fluid'); ?>
-                    </a>
-                </div>
-            </div>
+			<div class="entry-image">
+				<div class="imagecontainer">
+					<a class="post-thumbnail" href="<?php the_permalink(); ?>">
+						<?php echo _s_lazy_image( $img_id, $size, 'img-fluid' ); ?>
+					</a>
+				</div>
+			</div>
 
-		<?php
+			<?php
 		endif; // End is_singular().
 	}
 endif;
 
 if ( ! function_exists( '_s_pagination_links' ) ) :
-/**
- * Numbered pagination
- */
-function _s_pagination_links() {
-	global $wp_query;
+	/**
+	 * Numbered pagination
+	 */
+	function _s_pagination_links() {
+		global $wp_query;
 
-	$total_pages = $wp_query->max_num_pages;
+		$total_pages = $wp_query->max_num_pages;
 
-	if ($total_pages > 1){
-		$current_page = max(1, get_query_var('paged'));
+		if ( $total_pages > 1 ) {
+			$current_page = max( 1, get_query_var( 'paged' ) );
 
-		$base = get_pagenum_link( 1 ) . '%_%';
-		$format = 'page/%#%';
+			$base   = get_pagenum_link( 1 ) . '%_%';
+			$format = 'page/%#%';
 
-		if (is_search()) {
-			$base = get_home_url() . '%_%';
-			$format = '/page/%#%/';
+			if ( is_search() ) {
+				$base   = get_home_url() . '%_%';
+				$format = '/page/%#%/';
+			}
+
+			echo paginate_links(
+				array(
+					'base'    => $base,
+					'format'  => $format,
+					'type'    => 'list',
+					'current' => $current_page,
+					'total'   => $total_pages,
+				)
+			);
 		}
-
-		echo paginate_links(array(
-			'base' => $base,
-			'format' => $format,
-			'type'      => 'list',
-			'current' => $current_page,
-			'total' => $total_pages,
-		));
 	}
-}
 endif;
 
 if ( ! function_exists( '_s_lazy_image' ) ) :
 	/**
 	 * Return a responsive image tag without the cropped images from a wp image array
+	 *
+	 * @param array  $img_arr Image array.
+	 * @param bool   $default If is default.
+	 * @param string $classes Class names.
+	 * @param bool   $fit If fit.
+	 * @param bool   $disable_lazy If lazy should be disabled.
+	 *
+	 * @return string.
 	 */
 	function _s_lazy_image( $img_arr, $default = null, $classes = '', $fit = null, $disable_lazy = false ) {
 
@@ -177,17 +190,17 @@ if ( ! function_exists( '_s_lazy_image' ) ) :
 		if ( ! is_array( $img_arr ) ) {
 			return '';
 		}
-		//Get a list of available image sizes
+		// Get a list of available image sizes.
 		$sizes = get_intermediate_image_sizes();
-		//Remove thumbnail and medium which are always first
+		// Remove thumbnail and medium which are always first.
 		unset( $sizes[0], $sizes[1] );
 
 		if ( is_admin() || $disable_lazy ) {
 			$src    = 'src="';
 			$srcset = 'srcset="';
 		} else {
-			$src    = 'data-src="';
-			$srcset = 'data-srcset="';
+			$src      = 'data-src="';
+			$srcset   = 'data-srcset="';
 			$classes .= ' lazyload ';
 		}
 
@@ -201,11 +214,11 @@ if ( ! function_exists( '_s_lazy_image' ) ) :
 		}
 
 		if ( ! is_admin() && ! $disable_lazy ) {
-			//Add a blank image on pageload
+			// Add a blank image on pageload.
 			$tag .= 'srcset="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" ' . "\n";
 		}
 
-		//Now loop through the available sizes and add them with their widths, default first
+		// Now loop through the available sizes and add them with their widths, default first.
 		if ( isset( $default ) && isset( $img_arr['sizes'][ $default . '-width' ] ) ) {
 			$tag .= $srcset . $img_arr['sizes'][ $default ] . ' ' . $img_arr['sizes'][ $default . '-width' ] . 'w ' . $img_arr['sizes'][ $default . '-height' ] . 'h,' . "\n";
 		} elseif ( isset( $default ) && isset( $img_arr['sizes'][ $default ]['width'] ) ) {
@@ -214,41 +227,42 @@ if ( ! function_exists( '_s_lazy_image' ) ) :
 			$tag .= $srcset . $img_arr['url'] . ' ' . $img_arr['width'] . 'w ' . $img_arr['height'] . 'h, ' . "\n";
 		}
 		foreach ( $sizes as $key => $size ) {
-			//We only want to add a size if it's smaller than the original image
+			// We only want to add a size if it's smaller than the original image.
 			if ( isset( $img_arr['sizes'][ $size . '-width' ] ) && $img_arr['sizes'][ $size . '-width' ] < $img_arr['width'] ) {
 				$tag .= $img_arr['sizes'][ $size ] . ' ' . $img_arr['sizes'][ $size . '-width' ] . 'w, ' . "\n";
 			} elseif ( isset( $img_arr['sizes'][ $size ]['width'] ) && $img_arr['sizes'][ $size ]['width'] < $img_arr['width'] ) {
 				$tag .= $img_arr['sizes'][ $size ]['url'] . ' ' . $img_arr['sizes'][ $size ]['width'] . 'w, ' . "\n";
 			}
 		}
-		//Trim off the last comma and close the quote
+		// Trim off the last comma and close the quote.
 		$tag = rtrim( $tag, ",\n " ) . '" ' . "\n";
-		//We want the plugin in auto mode so will hardcode this bit
+		// We want the plugin in auto mode so will hardcode this bit.
 		$tag .= 'data-sizes="auto" ' . "\n";
-		//If object-fit is set we need a data att to support ie
+		// If object-fit is set we need a data att to support ie.
 		if ( isset( $fit ) && ( $fit === 'cover' || $fit === 'contain' ) ) {
-			$tag     .= 'data-parent-fit="' . $fit . '"' . "\n";
+			$tag    .= 'data-parent-fit="' . $fit . '"' . "\n";
 			$classes = $classes . ' imagecontainer-img-' . $fit;
 		}
-		//Add the classes
+		// Add the classes.
 		$tag .= 'class="' . $classes . '"' . "\n";
-		//Add the alt
+		// Add the alt.
 		$tag .= 'alt="' . $img_arr['alt'] . '"' . "\n";
-		//Close the tag
+		// Close the tag.
 		$tag .= ' />';
 
 		return $tag;
-
 	}
 endif;
 
 if ( ! function_exists( '_s_custom_code' ) ) :
 	/**
 	 * Echo custom code from the customizer
+	 *
+	 * @param string $location Setting name.
 	 */
 	function _s_custom_code( $location = false ) {
 
-		if ( $location === false ) {
+		if ( ! $location ) {
 			return false;
 		}
 
@@ -266,7 +280,7 @@ if ( ! function_exists( '_s_copyright' ) ) :
 	 */
 	function _s_copyright() {
 
-		$copyright = get_theme_mod('_s_copyright');
+		$copyright = get_theme_mod( '_s_copyright' );
 
 		if ( $copyright ) {
 			echo '<p class="mb-md-0">' . str_replace( '{year}', date( 'Y' ), $copyright ) . '</p>';

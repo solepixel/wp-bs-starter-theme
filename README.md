@@ -26,10 +26,10 @@ Getting Started
 
 **Installation**
 
-1. Edit `gulpfile.js` and update the browserSync proxy location to your localhost domain.
+1. Edit `wpgulp.config.js` and update the browserSync proxy location to your localhost domain.
 2. Run `npm install` to install dependencies.
 3. Run `gulp install` to copy library scss files into the main scss folder and rename theme strings.
-4. Run `gulp` to generate compiled assets and watch folders.
+4. Run `gulp` (or `npm start`) to generate compiled assets and watch folders.
 
 Note: After running `gulp install` you will be prompted for a theme name. This should be short as it is used for function prefixes and language strings.  
 Any capitals will be converted to lowercase and any spaces replaced with a dash.

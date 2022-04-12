@@ -1,0 +1,220 @@
+@use "sass:math";
+
+// Check if is editor styles.
+// @return bool
+@function is-editor() {
+	@return global-variable-exists( editor-styles ) and true == $editor-styles;
+}
+
+/// Max-width Media Query with optional min-width media query.
+///
+/// @param int $max For use with max-width media queries.
+/// @param int $min For use with min-width media queries.
+@mixin mq( $max, $min: false ) {
+	@if $min {
+		@if $max {
+			@media screen and ( min-width: #{$min}px ) and ( max-width: #{$max}px ) {
+				@content;
+			}
+		} @else {
+			@media screen and ( min-width: #{$min}px ) {
+				@content;
+			}
+		}
+	} @else {
+		@media screen and ( max-width: #{$max}px ) {
+			@content;
+		}
+	}
+}
+
+/// Output Media Query based on dynamic breakpoint.
+///
+/// @param string|int $max-breakpoint For use with max-width media query.
+/// @param string|int $min-breakpoint For use with min-width media query.
+@mixin bp( $max-breakpoint, $min-breakpoint: false ) {
+	$max: $max-breakpoint;
+	$min: $min-breakpoint;
+
+	@if is-editor() {
+		$breakpoints: (
+				'tablet': 768,
+		);
+	}
+
+	@if type_of( $max ) == string {
+		$max: map-get( $breakpoints, $max );
+	}
+
+	@if type_of( $min ) == string {
+		$min: map-get( $breakpoints, $min );
+	}
+
+	@if ( type_of( $max ) == 'number' or type_of( $min ) == 'number' ) {
+		@include mq( $max, $min ) {
+			@content;
+		}
+	} @else if not is-editor() {
+		@if ( type_of( $max ) == 'null' ) {
+			@debug "no breakpoint found for: #{$max-breakpoint}";
+		}
+		@if ( type_of( $min ) == 'null' ) {
+			@debug "no breakpoint found for: #{$min-breakpoint}";
+		}
+	}
+}
+
+/// Auto-calculate rem based on px font size.
+///
+/// @param int  $px         Font size in pixels.
+/// @param bool $important  If important should be added.
+/// @param bool $responsive If automatic responsive size should be added.
+@mixin font-size( $px, $important: false, $responsive: true ) {
+	$rem-size: math.div( $px, $base-font-size );
+	font-size: #{$px}px;
+	@if ( $important ) {
+		font-size: #{$rem-size}rem !important;
+	} @else {
+		font-size: #{$rem-size}rem;
+	}
+
+	@if ( $responsive and $px > ($base-font-size + 1) ) {
+		$px: $px * 0.85;
+		$rem-size: math.div( $px, $base-font-size );
+
+		@include bp( 'tablet' ) {
+			font-size: #{$px}px;
+			@if ($important) {
+				font-size: #{$rem-size}rem !important;
+			} @else {
+				font-size: #{$rem-size}rem;
+			}
+		}
+
+		@if ( $px > ($base-font-size + 1) ) {
+			$px: $px * 0.85;
+			@if ( $px < $base-font-size ) {
+				$px: $base-font-size;
+			}
+		} @else {
+			$px: $base-font-size;
+		}
+
+		$rem-size: math.div( $px, $base-font-size );
+
+		@include mq( 620 ) {
+			font-size: #{$px}px;
+			@if ( $important ) {
+				font-size: #{math.div( $px, $base-font-size)}rem !important;
+			} @else {
+				font-size: #{math.div( $px, $base-font-size)}rem;
+			}
+		}
+
+		@if ( $px > ($base-font-size + 1) ) {
+			$px: $px * 0.80;
+			@if ( $px < $base-font-size ) {
+				$px: $base-font-size;
+			}
+		} @else {
+			$px: $base-font-size;
+		}
+
+		$rem-size: math.div( $px, $base-font-size );
+
+		@include bp( 'mobile' ) {
+			font-size: #{$px}px;
+			@if ($important) {
+				font-size: #{$rem-size}rem !important;
+			} @else {
+				font-size: #{$rem-size}rem;
+			}
+		}
+	}
+}
+
+/// Fetch and output z-index from z-index mapping.
+/// @see _vars.scss
+/// @param string $element Z-index map key name.
+@mixin z-index( $element ) {
+	z-index: map-get( $z-index, $element );
+}
+
+/// Fetch and return color by name.
+/// @see _vars.scss
+///
+/// @param string $color Color map key name.
+///
+/// @return string Color Hex.
+@function color( $color ) {
+	@return map-get( $colors, $color );
+}
+
+/// Fetch and output font-weight from font-weight mapping.
+/// @see _vars.scss
+/// @param string $weight Font weight map key name.
+@mixin font-weight( $weight ) {
+	font-weight: map-get( $font-weights, $weight );
+}
+
+/// Prepare CSS vars and default color classes.
+@mixin prepare-vars() {
+	@at-root {
+		:root {
+			--content-width: #{$content-width}px;
+			@each $color, $hex in $colors {
+				--#{$color}: #{$hex};
+			}
+		}
+
+		@each $color, $hex in $colors {
+			.has-#{$color}-background-color {
+				background-color: #{$hex};
+			}
+			.has-#{$color}-color {
+				color: #{$hex};
+			}
+		}
+	}
+}
+
+/// Input/select/textarea placeholder.
+@mixin placeholder() {
+	&::-webkit-input-placeholder {@content}
+	&:-moz-placeholder           {@content}
+	&::-moz-placeholder          {@content}
+	&:-ms-input-placeholder      {@content}
+}
+
+/// Insert background image using cover.
+///
+/// @param string $img    Image filename.
+/// @param bool   $extras If extras should be added.
+@mixin bg-image( $img, $extras: true ) {
+	background-image: url( '#{$images-path}#{$img}' );
+	@if $extras {
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+		background-size: cover;
+	}
+}
+
+/// Insert background image using contain.
+///
+/// @param string $img    Image filename.
+/// @param bool   $extras If extras should be added.
+@mixin bg-icon( $img, $extras: true ) {
+	background-image: url( '#{$images-path}#{$img}' );
+	@if $extras {
+		background-position: 50% 50%;
+		background-repeat: no-repeat;
+		background-size: contain;
+	}
+}
+
+/// Inject generic content styles into a section.
+@mixin content-styles() {
+	ul {
+		list-style: disc inside;
+	}
+}
