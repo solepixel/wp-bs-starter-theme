@@ -14,6 +14,16 @@
 // > depending upon your local WordPress setup.
 const projectURL = 'https://projectname.test';
 const projectSlug = 'projectname';
+const packageName = 'ProjectName';
+
+// Where can users report bugs.
+const bugReport = 'https://github.com/RelevanceDigital/wp-bs-starter-theme/issues';
+
+// Last translator Email ID.
+const lastTranslator = 'Relevance <sales@relevance.digital>';
+
+// Team's Email ID.
+const team = 'Relevance <sales@relevance.digital>';
 
 // Theme/Plugin URL. Leave it like it is; since our gulpfile.js lives in the root folder.
 const productURL = './';
@@ -21,10 +31,11 @@ const browserAutoOpen = true;
 const injectChanges = true;
 
 // >>>>> Style options.
-// Path to main .scss file.
+// Path to main .scss files.
 const styleSRC = './source/sass/style.scss';
 const adminStyleSRC = './source/sass/admin.scss';
 const editorStyleSRC = './source/sass/editor.scss';
+const bootstrapDestination = './source/sass/';
 
 // Path to place the compiled CSS file. Default set to root folder.
 const styleDestination = './';
@@ -128,7 +139,7 @@ const zipIgnoreGlob = [
 	'!./vscode',
 	'!./package.json',
 	'!./package-lock.json',
-	'!./source/**/*'
+	'!./source/**/*',
 ];
 
 // >>>>> Translation options.
@@ -140,18 +151,6 @@ const translationFile = projectSlug + '.pot';
 
 // Where to save the translation files.
 const translationDestination = './languages';
-
-// Package name.
-const packageName = 'ProjectName';
-
-// Where can users report bugs.
-const bugReport = 'https://github.com/RelevanceDigital/wp-bs-starter-theme/issues';
-
-// Last translator Email ID.
-const lastTranslator = 'Relevance <sales@relevance.digital>';
-
-// Team's Email ID.
-const team = 'Relevance <sales@relevance.digital>';
 
 // Browsers you care about for auto-prefixing. Browserlist https://github.com/ai/browserslist
 // The following list is set as per WordPress requirements. Though; Feel free to change.
@@ -191,6 +190,7 @@ module.exports = {
 	watchJsEditor,
 	watchJsCustomizer,
 	watchPhp,
+	bootstrapDestination,
 	zipName,
 	zipDestination,
 	zipIncludeGlob,

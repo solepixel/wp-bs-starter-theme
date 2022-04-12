@@ -17,9 +17,9 @@ Intended for use with the WordPress block editor (Gutenberg) and blocks created 
 
 ## Requirements
 
- - node/npm
- - Gulp-cli installed globally: `npm install --global gulp-cli`
- 
+- node/npm
+- Gulp-cli installed globally: `npm install --global gulp-cli`
+
 
 Getting Started
 ---------------
@@ -28,8 +28,8 @@ Getting Started
 
 1. Edit `wpgulp.config.js` and update the browserSync proxy location to your localhost domain.
 2. Run `npm install` to install dependencies.
-3. Run `gulp install` to copy library scss files into the main scss folder and rename theme strings.
-4. Run `gulp` (or `npm start`) to generate compiled assets and watch folders.
+3. Run `npm setup` (or `gulp install`) to copy library scss files into the main scss folder and rename theme strings.
+4. Run `npm start` (or `gulp`) to generate compiled assets and watch folders.
 
 Note: After running `gulp install` you will be prompted for a theme name. This should be short as it is used for function prefixes and language strings.  
 Any capitals will be converted to lowercase and any spaces replaced with a dash.
@@ -111,7 +111,7 @@ The basic process to add a new block is:
 2. Create a new set of custom fields and assign them to the block.
 3. The `render_template` file location added when registering the block is the file that creates the output. Use PHP and HTML to create the output.
 
-Notes: 
+Notes:
 
 - In the admin editor, images using the lazy load function have lazyloading automatically disabled so they can be viewed in the editor.
 - If you need a unique identifier for any JavaScript, use `$block['id']` to get the ID of the block.

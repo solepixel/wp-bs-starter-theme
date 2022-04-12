@@ -57,8 +57,8 @@ add_action( 'after_setup_theme', '_s_load_editor_style' );
  * Editor stylesheet
  */
 function _s_load_editor_style() {
-	if ( file_exists( get_template_directory() . '/assets/css/editor.min.css' ) ) {
-		add_editor_style( get_template_directory_uri() . '/assets/css/editor.min.css' );
+	if ( file_exists( get_template_directory() . '/editor.min.css' ) ) {
+		add_editor_style( get_template_directory_uri() . '/editor.min.css' );
 	}
 }
 
@@ -79,8 +79,8 @@ add_action( 'admin_enqueue_scripts', '_s_admin_assets' );
  * Enqueue admin scripts and styles.
  */
 function _s_admin_assets() {
-	if ( file_exists( get_template_directory() . '/assets/css/admin.min.css' ) ) {
-		wp_enqueue_style( '_s-admin-style', get_template_directory_uri() . '/assets/css/admin.min.css', array(), THEME_VERSION );
+	if ( file_exists( get_template_directory() . '/admin.min.css' ) ) {
+		wp_enqueue_style( '_s-admin-style', get_template_directory_uri() . '/admin.min.css', array(), THEME_VERSION );
 	}
 
 	if ( file_exists( get_template_directory() . '/assets/js/admin.min.js' ) ) {
